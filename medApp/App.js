@@ -1,114 +1,117 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React, { Component } from 'react';
+import { View, Text, ScrollView, StyleSheet, TextInput } from 'react-native';
+import { Button, Divider } from 'react-native-elements';
+import { InputValue, InputBinaryValue } from './src/components/InputValue.js';
 
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
-
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      // parameters
+      // control
+      calced: false
+    }
+    this.age= null;
+    this.sex= null;
+    this.height= null;
+    this.weight= null;
+    this.bmi= null;
+    this.hem= null;
+    this.cre= null;
+    this.bnp= null;
+    this.af= null;
+    this.res= null;
+  }
+  calc=()=>{
+    this.res=1
+  }
+  willReCalc=()=>{
+    this.setState({calced:false})
+  }
+  render() {
+    return (
+      <View style={styles.main}>
+        <View style={{justifyContent:'center', alignItems:'center', paddingBottom:20}}>
+          <Text style={{fontSize:40}}>NY-proBNP calculator</Text>
+        </View>
+        
+        <ScrollView>
+          <Divider style={styles.divider}></Divider>
+          <InputValue valueName='Age ' valueUnit='yaer' min={20} max={120} setValue={(value) => { this.yaer=value;this.willReCalc(); }} />
+          <Divider style={styles.divider}></Divider>
+          <InputBinaryValue valueName='Sex' left='Man' right='Woman' setValue={(left)=>{ (left?this.sex=0:this.sex=1);this}}   />
+          <Divider style={styles.divider}></Divider>
+          <InputValue valueName='Height ' valueUnit='cm' min={120} max={200} setValue={(value) => { this.height=value;this.willReCalc(); }} />
+          <Divider style={styles.divider}></Divider>
+          <InputValue valueName='Weight ' valueUnit='kg' min={25} max={130} setValue={(value) => { this.weight=value;this.willReCalc(); }} />
+          <Divider style={styles.divider}></Divider>
+          {/* <InputValue valueName='BMI ' valueUnit='kg/m^2' min={12} max={43} setValue={(value)=>{this.setState({height:value})}}/> */}
+          <InputValue valueName='Hemoglobin ' valueUnit='g/dl' min={5} max={20} setValue={(value) => { this.hem=value;this.willReCalc(); }} />
+          <Divider style={styles.divider}></Divider>
+          <InputValue valueName='Creatinine ' valueUnit='md/dl' min={0} max={3.0} setValue={(value) => { this.cre=value;this.willReCalc(); }} />
+          <Divider style={styles.divider}></Divider>
+          <InputValue valueName='BNP ' valueUnit='pg/dl' min={4} max={4000} setValue={(value) => { this.height=this.bnp;this.willReCalc(); }} />
+          <Divider style={styles.divider}></Divider>
+          <InputBinaryValue valueName='AF' left='Yes' right='No' setValue={(left)=>{ (left?this.af=0:this.af=1);this.willReCalc()}}/>
+          <Divider style={styles.divider}></Divider>
         </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+
+        {this.state.calced?
+          <Button disabled title='calculate' onPress={this.calc} backgroundColor='#ff5622'></Button>:
+          <Button title='calculate' onPress={ ()=>{this.calc();this.setState({calced:true})}} backgroundColor='#ff5622'></Button>
+        }
+
+        <View style={{ flexDirection: 'row' }}>
+          <View style={styles.valueNameView}>
+            <Text style={styles.text}> NT-proBNP </Text>
+          </View>
+          <View style={styles.inputView}>
+            {this.res==null?<Text>???</Text>:<Text style={styles.text}>{this.res}</Text>}
+          </View>
+          <View style={styles.unitView}>
+            <Text style={styles.text}>pg/ml</Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
+}
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  main: {
+    flex: 1,
+    // backgroundColor: '#FF00FF',
+    justifyContent: 'center',
+    // alignItems:'center',
+    paddingTop: 33,
+    paddingBottom: 30
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  divider: {
+    backgroundColor: '#20202020',
+    height: 2
   },
-  body: {
-    backgroundColor: Colors.white,
+  text: {
+    fontSize: 30
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  valueNameView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
+  inputView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
+  unitView: {
+    flex: 0.5,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
+  Button: {
 
-export default App;
+  }
+})
