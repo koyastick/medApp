@@ -56,24 +56,24 @@ export class InputBinaryValue extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pushedL:false,
-      pushedR:false
+      pushedL: false,
+      pushedR: false
     }
   }
   render() {
     return (
-      <View style={styles.inputValue}>
+      <View style={styles.inputBinaryValue}>
         <View style={styles.valueNameView}>
           <Text style={styles.text}>{this.props.valueName}</Text>
         </View>
         <View style={styles.buttonsView}>
-          {this.state.pushedL?
+          {this.state.pushedL ?
             <Button disabled title={this.props.left} backgroundColor='#ff5622'></Button> :
-            <Button title={this.props.left} onPress={() => { this.props.setValue(this.props.left); this.setState({ pushedL:true, pushedR:false }) }} backgroundColor='#ff5622'></Button>
+            <Button title={this.props.left} onPress={() => { this.props.setValue(this.props.left); this.setState({ pushedL: true, pushedR: false }) }} backgroundColor='#ff5622'></Button>
           }
-          {this.state.pushedR?
+          {this.state.pushedR ?
             <Button disabled title={this.props.right} backgroundColor='#ff5622'></Button> :
-            <Button title={this.props.right} onPress={() => { this.props.setValue(this.props.right); this.setState({ pushedR:true, pushedL:false }) }} backgroundColor='#ff5622'></Button>
+            <Button title={this.props.right} onPress={() => { this.props.setValue(this.props.right); this.setState({ pushedR: true, pushedL: false }) }} backgroundColor='#ff5622'></Button>
           }
         </View>
       </View>
@@ -84,10 +84,19 @@ export class InputBinaryValue extends Component {
 
 
 const styles = StyleSheet.create({
-  inputValue:{
+  inputValue: {
     flexDirection: 'row',
-     margin: 10,
-     height:70
+    margin: 10,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  inputBinaryValue: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    height: 60,
+    margin: 10
   },
   valueNameView: {
     flex: 1,
