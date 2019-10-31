@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, ScrollView, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native'
-import {Button, } from 'react-native-elements';
+import { Button, } from 'react-native-elements';
 
 
 export class InputValue extends Component {
@@ -12,7 +12,7 @@ export class InputValue extends Component {
   }
   render() {
     return (
-      <View style={{ flexDirection: 'row', backgroundColor: '', margin: 10}}>
+      <View style={styles.inputValue}>
         <View style={styles.valueNameView}>
           <Text style={styles.text}>{this.props.valueName}</Text>
         </View>
@@ -39,7 +39,7 @@ export class InputValue extends Component {
               else {
                 this.state.value = null;
                 this.TextInput.clear();
-                Alert.alert('value out of range', this.props.valueName + 'は'+this.props.min+'から' +this.props.max+'の値を入力して下さい');
+                Alert.alert('value out of range', this.props.valueName + 'は' + this.props.min + 'から' + this.props.max + 'の値を入力して下さい');
               }
             }}
           />
@@ -56,75 +56,39 @@ export class InputBinaryValue extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: null
+      pushedL:false,
+      pushedR:false
     }
   }
   render() {
     return (
-      <View style={{ flexDirection: 'row', backgroundColor: '', justifyContent: 'space-evenly', alignItems: 'center', margin: 10 }}>
+      <View style={styles.inputValue}>
         <View style={styles.valueNameView}>
           <Text style={styles.text}>{this.props.valueName}</Text>
         </View>
         <View style={styles.buttonsView}>
-          {/* <Button onPress={this.props.setValue(true)} raised title={this.props.left} style={styles.Button}/>
-          <Button onPress={this.props.setValue(false)} raised title={this.props.right} style={styles.Button}/> */}
+          {this.state.pushedL?
+            <Button disabled title={this.props.left} backgroundColor='#ff5622'></Button> :
+            <Button title={this.props.left} onPress={() => { this.props.setValue(this.props.left); this.setState({ pushedL:true, pushedR:false }) }} backgroundColor='#ff5622'></Button>
+          }
+          {this.state.pushedR?
+            <Button disabled title={this.props.right} backgroundColor='#ff5622'></Button> :
+            <Button title={this.props.right} onPress={() => { this.props.setValue(this.props.right); this.setState({ pushedR:true, pushedL:false }) }} backgroundColor='#ff5622'></Button>
+          }
         </View>
       </View>
     )
   }
 }
 
-const stylesColor = StyleSheet.create({
-  valueNameView: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#00FF00',
-  },
-  inputView: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#0000FF',
-  },
-  unitView: {
-    flex: 0.5,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    backgroundColor: '#FF0000',
-  },
-  buttonsView: {
-    flex: 1.5,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    backgroundColor: 'skyblue'
-  },
-  TextInput: {
-    height: 40,
-    width: 150,
-    fontSize: 20
-  },
-  text: {
-    fontSize:30
-  },
-  buttonText: {
-    fontSize:20
-  },
-  Button: {
-    width:80,
-    // alignItems: 'center',
-    backgroundColor: '#AAAAAA',
-    // padding: 10,
-    // margin:10
-  },
-})
 
 
 const styles = StyleSheet.create({
+  inputValue:{
+    flexDirection: 'row',
+     margin: 10,
+     height:70
+  },
   valueNameView: {
     flex: 1,
     flexDirection: 'row',
@@ -155,13 +119,13 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   text: {
-    fontSize:30
+    fontSize: 30
   },
   buttonText: {
-    fontSize:20
+    fontSize: 20
   },
   Button: {
-    width:80,
+    width: 80,
     // alignItems: 'center',
     backgroundColor: '#AAAAAA',
     // padding: 10,

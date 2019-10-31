@@ -1,7 +1,55 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, Alert } from 'react-native';
 import { Button, Divider } from 'react-native-elements';
 import { InputValue, InputBinaryValue } from './src/components/InputValue.js';
+import { matchesPattern } from '@babel/types';
+
+
+//********************************************************************
+// 各種演算
+//====================================================================
+// <演算式>
+// BMI = 体重(kg) / (身長(cm)/100)^2
+// CCr = (140-年齢) * 体重 / (72*Cre) * IF(Mele, 1, 0.85)
+// NT-proBNP = 10^(2.05
+// 					+ 0.907 * log10(BNP)
+// 					- 0.00522 * 年齢
+// 					+ 0.00283 * BMI
+// 					- 0.00866 * Hb
+// 					- 0.0422 * CCr
+// 					+ 0.000530 * CCr^2
+// 					- 0.00000214 * CCr^3
+// 					- 0.00000278 * MAX(0, (CCr - 56.5)^3)
+// 					- 0.00000621 * MAX(0, (CCr - 72.4)^3)
+// 					- 0.00000133 * MAX(0, (CCr - 93.7)^3)
+// 					+ IF(Male, 0, 0.0164)
+// 					+ IF(non-AF, 0, 0.194))
+//====================================================================
+// Change Record
+//  Date		Ver		By			Article
+// -------------------------------------------------------------------
+//  2019.03.27	1.00 	Chart2		初版
+// 
+// 
+//********************************************************************
+
+//NT-proBNP演算用
+const K1 = 2.047041;
+const K2 = 0.9073734;
+const K3 = -0.005224782;
+const K4 = 0.00283043;
+const K5 = -0.008663586;
+const K6 = -0.04215072;
+const K7 = 0.0005299286;
+const K8 = -0.000002139456;
+const K9 = -0.000002775467;
+const K10 = 0.000006208488;
+const K11 = -0.000001329049;
+const K12 = 0.01644141;
+const K13 = 0.1938035;
+const CCR1 = 56.52597;
+const CCR2 = 72.42262;
+const CCR3 = 93.71528;
 
 export default class App extends Component {
   constructor(props) {
@@ -11,67 +59,95 @@ export default class App extends Component {
       // control
       calced: false
     }
-    this.age= null;
-    this.sex= null;
-    this.height= null;
-    this.weight= null;
-    this.bmi= null;
-    this.hem= null;
-    this.cre= null;
-    this.bnp= null;
-    this.af= null;
-    this.res= null;
+    this.age = null;
+    this.sex = null;
+    this.height = null;
+    this.weight = null;
+    this.hem = null;
+    this.cre = null;
+    this.bnp = null;
+    this.af = null;
+    this.ans = null;
   }
-  calc=()=>{
-    this.res=1
+  calc() {
+    if(this.age==null || this.sex==null || this.height==null || this.weight==null || this.hem ==null || this.cre==null || this.bnp==null || this.af==null){
+      Alert.alert('記入漏れがあります')
+      return 0;
+    }
+
+    let bmi = this.weight / Math.pow((this.height / 100), 2);
+    let ccr = (140 - this.age) * this.weight / (72 * this.cre) * (this.sex == "Man" ? 1 : 0.85);
+    let res = Math.pow(10, (
+      K1
+      + K2 * Math.log10(this.bnp)
+      + K3 * this.age
+      + K4 * bmi
+      + K5 * this.hem
+      + K6 * ccr
+      + K7 * Math.pow(ccr, 2)
+      + K8 * Math.pow(ccr, 3)
+      + K9 * Math.max(0, Math.pow(ccr - CCR1, 3))
+      + K10 * Math.max(0, Math.pow(ccr - CCR2, 3))
+      + K11 * Math.max(0, Math.pow(ccr - CCR3, 3))
+      + (this.sex == 'Man' ? 0 : K12)
+      + (this.af == 'No' ? 0 : K13)
+    )
+    )
+    console.log('result')
+    console.log(res)
+    this.ans = res
+    this.setState({ calced: true })
   }
-  willReCalc=()=>{
-    this.setState({calced:false})
+
+  willReCalc = () => {
+    this.setState({ calced: false })
   }
+
   render() {
     return (
       <View style={styles.main}>
-        <View style={{justifyContent:'center', alignItems:'center', paddingBottom:20}}>
-          <Text style={{fontSize:40}}>NY-proBNP calculator</Text>
+        <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom:10}}>
+          <Text style={{ fontSize: 40 }}>NY-proBNP calculator</Text>
         </View>
-        
+
         <ScrollView>
           <Divider style={styles.divider}></Divider>
-          <InputValue valueName='Age ' valueUnit='yaer' min={20} max={120} setValue={(value) => { this.yaer=value;this.willReCalc(); }} />
+          <InputValue valueName='Age ' valueUnit='yaer' min={20} max={120} setValue={(value) => { this.age = value; this.willReCalc(); }} />
           <Divider style={styles.divider}></Divider>
-          <InputBinaryValue valueName='Sex' left='Man' right='Woman' setValue={(left)=>{ (left?this.sex=0:this.sex=1);this}}   />
+          <InputBinaryValue valueName='Sex' left='Man' right='Woman' setValue={(ret) => { this.sex = ret; this.willReCalc() }} />
           <Divider style={styles.divider}></Divider>
-          <InputValue valueName='Height ' valueUnit='cm' min={120} max={200} setValue={(value) => { this.height=value;this.willReCalc(); }} />
+          <InputValue valueName='Height ' valueUnit='cm' min={120} max={200} setValue={(value) => { this.height = value; this.willReCalc(); }} />
           <Divider style={styles.divider}></Divider>
-          <InputValue valueName='Weight ' valueUnit='kg' min={25} max={130} setValue={(value) => { this.weight=value;this.willReCalc(); }} />
+          <InputValue valueName='Weight ' valueUnit='kg' min={25} max={130} setValue={(value) => { this.weight = value; this.willReCalc(); }} />
           <Divider style={styles.divider}></Divider>
           {/* <InputValue valueName='BMI ' valueUnit='kg/m^2' min={12} max={43} setValue={(value)=>{this.setState({height:value})}}/> */}
-          <InputValue valueName='Hemoglobin ' valueUnit='g/dl' min={5} max={20} setValue={(value) => { this.hem=value;this.willReCalc(); }} />
+          <InputValue valueName='Hemoglobin ' valueUnit='g/dl' min={5} max={20} setValue={(value) => { this.hem = value; this.willReCalc(); }} />
           <Divider style={styles.divider}></Divider>
-          <InputValue valueName='Creatinine ' valueUnit='md/dl' min={0} max={3.0} setValue={(value) => { this.cre=value;this.willReCalc(); }} />
+          <InputValue valueName='Creatinine ' valueUnit='md/dl' min={0} max={3.0} setValue={(value) => { this.cre = value; this.willReCalc(); }} />
           <Divider style={styles.divider}></Divider>
-          <InputValue valueName='BNP ' valueUnit='pg/dl' min={4} max={4000} setValue={(value) => { this.height=this.bnp;this.willReCalc(); }} />
+          <InputValue valueName='BNP ' valueUnit='pg/dl' min={4} max={4000} setValue={(value) => { this.bnp = value; this.willReCalc(); }} />
           <Divider style={styles.divider}></Divider>
-          <InputBinaryValue valueName='AF' left='Yes' right='No' setValue={(left)=>{ (left?this.af=0:this.af=1);this.willReCalc()}}/>
+          <InputBinaryValue valueName='AF' left='Yes' right='No' setValue={(ret) => { this.af = ret; this.willReCalc() }} />
           <Divider style={styles.divider}></Divider>
         </ScrollView>
 
-        {this.state.calced?
-          <Button disabled title='calculate' onPress={this.calc} backgroundColor='#ff5622'></Button>:
-          <Button title='calculate' onPress={ ()=>{this.calc();this.setState({calced:true})}} backgroundColor='#ff5622'></Button>
+        {this.state.calced ?
+          <Button disabled title='calculate' backgroundColor='#ff5622'></Button> :
+          <Button title='calculate' onPress={() => { this.calc()}} backgroundColor='#ff5622'></Button>
         }
 
-        <View style={{ flexDirection: 'row' }}>
+        <View style={styles.inputValue}>
           <View style={styles.valueNameView}>
             <Text style={styles.text}> NT-proBNP </Text>
           </View>
           <View style={styles.inputView}>
-            {this.res==null?<Text>???</Text>:<Text style={styles.text}>{this.res}</Text>}
+            {this.ans == null ? <Text></Text> : <Text style={styles.text}>{this.ans}</Text>}
           </View>
           <View style={styles.unitView}>
             <Text style={styles.text}>pg/ml</Text>
           </View>
         </View>
+
       </View>
     )
   }
@@ -85,6 +161,11 @@ const styles = StyleSheet.create({
     // alignItems:'center',
     paddingTop: 33,
     paddingBottom: 30
+  },
+  inputValue:{
+    flexDirection: 'row',
+     margin: 10,
+     height:70
   },
   divider: {
     backgroundColor: '#20202020',
