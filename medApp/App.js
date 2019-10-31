@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, Alert } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, Alert, Image} from 'react-native';
 import { Button, Divider } from 'react-native-elements';
 import { InputValue, InputBinaryValue } from './src/components/InputValue.js';
 import { matchesPattern } from '@babel/types';
@@ -70,7 +70,7 @@ export default class App extends Component {
     this.ans = null;
   }
   calc() {
-    if(this.age==null || this.sex==null || this.height==null || this.weight==null || this.hem ==null || this.cre==null || this.bnp==null || this.af==null){
+    if (this.age == null || this.sex == null || this.height == null || this.weight == null || this.hem == null || this.cre == null || this.bnp == null || this.af == null) {
       Alert.alert('記入漏れがあります')
       return 0;
     }
@@ -106,11 +106,12 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.main}>
-        <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom:10}}>
-          <Text style={{ fontSize: 40 }}>NY-proBNP calculator</Text>
-        </View>
-
         <ScrollView>
+          <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 10, backgroundColor:'#FFFFFF'}}>
+            <Text style={{ fontSize: 40 }}>NY-proBNP calculator</Text>
+          </View>
+
+        
           <Divider style={styles.divider}></Divider>
           <InputValue valueName='Age ' valueUnit='yaer' min={20} max={120} setValue={(value) => { this.age = value; this.willReCalc(); }} />
           <Divider style={styles.divider}></Divider>
@@ -129,11 +130,10 @@ export default class App extends Component {
           <Divider style={styles.divider}></Divider>
           <InputBinaryValue valueName='AF' left='Yes' right='No' setValue={(ret) => { this.af = ret; this.willReCalc() }} />
           <Divider style={styles.divider}></Divider>
-        </ScrollView>
 
         {this.state.calced ?
           <Button disabled title='calculate' backgroundColor='#ff5622'></Button> :
-          <Button title='calculate' onPress={() => { this.calc()}} backgroundColor='#ff5622'></Button>
+          <Button title='calculate' onPress={() => { this.calc() }} backgroundColor='#ff5622'></Button>
         }
 
         <View style={styles.inputValue}>
@@ -148,6 +148,26 @@ export default class App extends Component {
           </View>
         </View>
 
+        </ScrollView>
+        {/* 引用 */}
+        {/* <View style={styles.cmt}>
+          <Text>
+            NT-proBNP calculator cannot and will not be held legally, financially, or medically
+            responsible for calculated NT-proBNP values and decisions made based on the NT-proBNP values obtained using this auto-calculation tool.
+          </Text>
+        </View> */}
+        {/* 機関情報 */}
+        {/* <View style={{ flexDirection: "row" }}>
+          <Image source={require('./src/fig/med_logo1_25.png')} style={{ width: 100, height: 100 }} />
+          <View style={styles.container}>
+            <Text style={{ margin: 5 }}>
+              Kasahara S, Shimokawa H et al. Int J Cardiol. 2019;280:184-189.
+             </Text>
+            <Text style={{ margin: 5 }}>
+              Department of Cardiovascular Medicine, Tohoku University Graduate School of Medicine
+            </Text>
+          </View>
+        </View> */}
       </View>
     )
   }
@@ -162,10 +182,10 @@ const styles = StyleSheet.create({
     paddingTop: 33,
     paddingBottom: 30
   },
-  inputValue:{
+  inputValue: {
     flexDirection: 'row',
-     margin: 10,
-     height:70
+    margin: 10,
+    height: 70
   },
   divider: {
     backgroundColor: '#20202020',
