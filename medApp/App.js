@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, Alert, Image} from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, Alert, Image } from 'react-native';
 import { Button, Divider } from 'react-native-elements';
 import { InputValue, InputBinaryValue } from './src/components/InputValue.js';
 import { matchesPattern } from '@babel/types';
-
 
 //********************************************************************
 // 各種演算
@@ -51,12 +50,33 @@ const CCR1 = 56.52597;
 const CCR2 = 72.42262;
 const CCR3 = 93.71528;
 
+function getNTproBNP(age, sex, height, weight, hem, cre, bnp, af) {
+  let bmi = weight / Math.pow((height / 100), 2);
+  let ccr = (140 - age) * weight / (72 * cre) * (sex == "Man" ? 1 : 0.85);
+  let res = Math.pow(10, (
+    K1
+    + K2 * Math.log10(bnp)
+    + K3 * age
+    + K4 * bmi
+    + K5 * hem
+    + K6 * ccr
+    + K7 * Math.pow(ccr, 2)
+    + K8 * Math.pow(ccr, 3)
+    + K9 * Math.max(0, Math.pow(ccr - CCR1, 3))
+    + K10 * Math.max(0, Math.pow(ccr - CCR2, 3))
+    + K11 * Math.max(0, Math.pow(ccr - CCR3, 3))
+    + (sex == 'Man' ? 0 : K12)
+    + (af == 'No' ? 0 : K13)
+  )
+  )
+  return res;
+}
+
+
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // parameters
-      // control
       calced: false
     }
     this.age = null;
@@ -74,44 +94,22 @@ export default class App extends Component {
       Alert.alert('記入漏れがあります')
       return 0;
     }
-
-    let bmi = this.weight / Math.pow((this.height / 100), 2);
-    let ccr = (140 - this.age) * this.weight / (72 * this.cre) * (this.sex == "Man" ? 1 : 0.85);
-    let res = Math.pow(10, (
-      K1
-      + K2 * Math.log10(this.bnp)
-      + K3 * this.age
-      + K4 * bmi
-      + K5 * this.hem
-      + K6 * ccr
-      + K7 * Math.pow(ccr, 2)
-      + K8 * Math.pow(ccr, 3)
-      + K9 * Math.max(0, Math.pow(ccr - CCR1, 3))
-      + K10 * Math.max(0, Math.pow(ccr - CCR2, 3))
-      + K11 * Math.max(0, Math.pow(ccr - CCR3, 3))
-      + (this.sex == 'Man' ? 0 : K12)
-      + (this.af == 'No' ? 0 : K13)
-    )
-    )
-    console.log('result')
-    console.log(res)
-    this.ans = res
+    this.ans = getNTproBNP(this.age, this.sex, this.height, this.weight, this.hem, this.cre, this.bnp, this.af);
     this.setState({ calced: true })
   }
 
   willReCalc = () => {
     this.setState({ calced: false })
+    this.ans = null
   }
 
   render() {
     return (
       <View style={styles.main}>
         <ScrollView>
-          <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 10, backgroundColor:'#FFFFFF'}}>
-            <Text style={{ fontSize: 40 }}>NY-proBNP calculator</Text>
+          <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 10, backgroundColor: '#FFFFFF' }}>
+            <Text style={{ fontSize: 40 }}>NT-proBNP calculator</Text>
           </View>
-
-        
           <Divider style={styles.divider}></Divider>
           <InputValue valueName='Age ' valueUnit='yaer' min={20} max={120} setValue={(value) => { this.age = value; this.willReCalc(); }} />
           <Divider style={styles.divider}></Divider>
@@ -131,22 +129,22 @@ export default class App extends Component {
           <InputBinaryValue valueName='AF' left='Yes' right='No' setValue={(ret) => { this.af = ret; this.willReCalc() }} />
           <Divider style={styles.divider}></Divider>
 
-        {this.state.calced ?
-          <Button disabled title='calculate' backgroundColor='#ff5622'></Button> :
-          <Button title='calculate' onPress={() => { this.calc() }} backgroundColor='#ff5622'></Button>
-        }
+          {this.state.calced ?
+            <Button disabled title='calculate' backgroundColor='#ff5622'></Button> :
+            <Button title='calculate' onPress={() => { this.calc() }} backgroundColor='#ff5622'></Button>
+          }
 
-        <View style={styles.inputValue}>
-          <View style={styles.valueNameView}>
-            <Text style={styles.text}> NT-proBNP </Text>
+          <View style={styles.inputValue}>
+            <View style={styles.valueNameView}>
+              <Text style={styles.text}> NT-proBNP </Text>
+            </View>
+            <View style={styles.inputView}>
+              {this.ans == null ? <Text></Text> : <Text style={styles.text}>{this.ans.toFixed(1)}</Text>}
+            </View>
+            <View style={styles.unitView}>
+              <Text style={styles.text}>pg/ml</Text>
+            </View>
           </View>
-          <View style={styles.inputView}>
-            {this.ans == null ? <Text></Text> : <Text style={styles.text}>{this.ans}</Text>}
-          </View>
-          <View style={styles.unitView}>
-            <Text style={styles.text}>pg/ml</Text>
-          </View>
-        </View>
 
         </ScrollView>
         {/* 引用 */}
