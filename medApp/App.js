@@ -1,8 +1,160 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, Alert, Image } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, Alert, Image, KeyboardAvoidingView } from 'react-native';
 import { Button, Divider } from 'react-native-elements';
 import { InputValue, InputBinaryValue } from './src/components/InputValue.js';
 import { matchesPattern } from '@babel/types';
+
+
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      calced: false
+    }
+    this.age = null;
+    this.sex = "Man";
+    this.height = null;
+    this.weight = null;
+    this.hem = null;
+    this.cre = null;
+    this.bnp = null;
+    this.af = "Yes";
+    this.ans = null;
+  }
+  calc() {
+    if (this.age == null || this.sex == null || this.height == null || this.weight == null || this.hem == null || this.cre == null || this.bnp == null || this.af == null) {
+      Alert.alert('記入漏れがあります')
+      return 0;
+    }
+    this.ans = getNTproBNP(this.age, this.sex, this.height, this.weight, this.hem, this.cre, this.bnp, this.af);
+    this.setState({ calced: true })
+  }
+
+  willReCalc = () => {
+    this.setState({ calced: false })
+    this.ans = null
+  }
+
+  render() {
+    return (
+      <View style={styles.main}>
+        {/* アプリケーションタイトル */}
+        <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 0 }}>
+          <Text style={{ fontSize: 30 }}>NT-proBNP calculator</Text>
+        </View>
+        <Divider style={styles.divider}></Divider>
+        {/* 数値入力 */}
+        <KeyboardAvoidingView style={{ flex: 5 }} behavior="height" enabled>
+          <ScrollView>
+            <Divider style={styles.divider}></Divider>
+            <InputValue valueName='Age ' valueUnit='yaer' min={20} max={120} setValue={(value) => { this.age = value; this.willReCalc(); }} />
+            <Divider style={styles.divider}></Divider>
+            <InputBinaryValue valueName='Sex' left='Man' right='Woman' setValue={(ret) => { this.sex = ret; this.willReCalc() }} />
+            <Divider style={styles.divider}></Divider>
+            <InputValue valueName='Height ' valueUnit='cm' min={120} max={200} setValue={(value) => { this.height = value; this.willReCalc(); }} />
+            <Divider style={styles.divider}></Divider>
+            <InputValue valueName='Weight ' valueUnit='kg' min={25} max={130} setValue={(value) => { this.weight = value; this.willReCalc(); }} />
+            <Divider style={styles.divider}></Divider>
+            <InputValue valueName='Hemoglobin ' valueUnit='g/dl' min={5} max={20} setValue={(value) => { this.hem = value; this.willReCalc(); }} />
+            <Divider style={styles.divider}></Divider>
+            <InputValue valueName='Creatinine ' valueUnit='md/dl' min={0} max={3.0} setValue={(value) => { this.cre = value; this.willReCalc(); }} />
+            <Divider style={styles.divider}></Divider>
+            <InputValue valueName='BNP ' valueUnit='pg/dl' min={4} max={4000} setValue={(value) => { this.bnp = value; this.willReCalc(); }} />
+            <Divider style={styles.divider}></Divider>
+            <InputBinaryValue valueName='AF' left='Yes' right='No' setValue={(ret) => { this.af = ret; this.willReCalc() }} />
+            <Divider style={styles.divider}></Divider>
+          </ScrollView>
+        </KeyboardAvoidingView>
+        {/* 計算実行ボタン */}
+        {
+          this.state.calced ?
+            <Button disabled title='calculate' backgroundColor='#ff5622'></Button> :
+            <Button title='calculate' onPress={() => { this.calc() }} backgroundColor='#ff5622'></Button>
+        }
+        {/* 計算結果表示 */}
+        <View style={styles.inputValue}>
+          <View style={styles.valueNameView}>
+            <Text style={styles.text}> NT-proBNP </Text>
+          </View>
+          <View style={styles.inputView}>
+            {this.ans == null ? <Text></Text> : <Text style={styles.text}>{this.ans.toFixed(1)}</Text>}
+          </View>
+          <View style={styles.unitView}>
+            <Text style={styles.text}>pg/ml</Text>
+          </View>
+        </View>
+        <Divider style={styles.divider}></Divider>
+        {/* 引用 */}
+        <ScrollView style={{ flex: 1 }}>
+          <View style={styles.cmt}>
+            <Text>
+              NT-proBNP calculator cannot and will not be held legally, financially, or medically
+              responsible for calculated NT-proBNP values and decisions made based on the NT-proBNP values obtained using this auto-calculation tool.
+          </Text>
+          </View>
+          {/* 機関情報 */}
+          <View style={{ flexDirection: "row" }}>
+            <Image source={require('./src/fig/med_logo1_25.png')} style={{ width: 60, height: 60 }} />
+            <View style={styles.container}>
+              <Text style={{ margin: 5 }}>
+                Kasahara S, Shimokawa H et al. Int J Cardiol. 2019;280:184-189.
+             </Text>
+              <Text style={{ margin: 5 }}>
+                Department of Cardiovascular Medicine, Tohoku University Graduate School of Medicine
+            </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </View >
+    )
+  }
+}
+
+const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+    // backgroundColor: '#FF00FF',
+    justifyContent: 'space-evenly',
+    // alignItems:'center',
+    paddingTop: 33,
+    paddingBottom: 0,
+    paddingHorizontal: 5
+  },
+  inputValue: {
+    flexDirection: 'row',
+    margin: 10,
+    height: 37,
+  },
+  divider: {
+    backgroundColor: '#20202020',
+    height: 2
+  },
+  text: {
+    fontSize: 20
+  },
+  valueNameView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  unitView: {
+    flex: 0.5,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  Button: {
+
+  }
+})
+
 
 //********************************************************************
 // 各種演算
@@ -69,148 +221,6 @@ function getNTproBNP(age, sex, height, weight, hem, cre, bnp, af) {
     + (af == 'No' ? 0 : K13)
   )
   )
+  console.log(res)
   return res;
 }
-
-
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      calced: false
-    }
-    this.age = null;
-    this.sex = null;
-    this.height = null;
-    this.weight = null;
-    this.hem = null;
-    this.cre = null;
-    this.bnp = null;
-    this.af = null;
-    this.ans = null;
-  }
-  calc() {
-    if (this.age == null || this.sex == null || this.height == null || this.weight == null || this.hem == null || this.cre == null || this.bnp == null || this.af == null) {
-      Alert.alert('記入漏れがあります')
-      return 0;
-    }
-    this.ans = getNTproBNP(this.age, this.sex, this.height, this.weight, this.hem, this.cre, this.bnp, this.af);
-    this.setState({ calced: true })
-  }
-
-  willReCalc = () => {
-    this.setState({ calced: false })
-    this.ans = null
-  }
-
-  render() {
-    return (
-      <View style={styles.main}>
-        <ScrollView>
-          <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 10, backgroundColor: '#FFFFFF' }}>
-            <Text style={{ fontSize: 40 }}>NT-proBNP calculator</Text>
-          </View>
-          <Divider style={styles.divider}></Divider>
-          <InputValue valueName='Age ' valueUnit='yaer' min={20} max={120} setValue={(value) => { this.age = value; this.willReCalc(); }} />
-          <Divider style={styles.divider}></Divider>
-          <InputBinaryValue valueName='Sex' left='Man' right='Woman' setValue={(ret) => { this.sex = ret; this.willReCalc() }} />
-          <Divider style={styles.divider}></Divider>
-          <InputValue valueName='Height ' valueUnit='cm' min={120} max={200} setValue={(value) => { this.height = value; this.willReCalc(); }} />
-          <Divider style={styles.divider}></Divider>
-          <InputValue valueName='Weight ' valueUnit='kg' min={25} max={130} setValue={(value) => { this.weight = value; this.willReCalc(); }} />
-          <Divider style={styles.divider}></Divider>
-          {/* <InputValue valueName='BMI ' valueUnit='kg/m^2' min={12} max={43} setValue={(value)=>{this.setState({height:value})}}/> */}
-          <InputValue valueName='Hemoglobin ' valueUnit='g/dl' min={5} max={20} setValue={(value) => { this.hem = value; this.willReCalc(); }} />
-          <Divider style={styles.divider}></Divider>
-          <InputValue valueName='Creatinine ' valueUnit='md/dl' min={0} max={3.0} setValue={(value) => { this.cre = value; this.willReCalc(); }} />
-          <Divider style={styles.divider}></Divider>
-          <InputValue valueName='BNP ' valueUnit='pg/dl' min={4} max={4000} setValue={(value) => { this.bnp = value; this.willReCalc(); }} />
-          <Divider style={styles.divider}></Divider>
-          <InputBinaryValue valueName='AF' left='Yes' right='No' setValue={(ret) => { this.af = ret; this.willReCalc() }} />
-          <Divider style={styles.divider}></Divider>
-
-          {this.state.calced ?
-            <Button disabled title='calculate' backgroundColor='#ff5622'></Button> :
-            <Button title='calculate' onPress={() => { this.calc() }} backgroundColor='#ff5622'></Button>
-          }
-
-          <View style={styles.inputValue}>
-            <View style={styles.valueNameView}>
-              <Text style={styles.text}> NT-proBNP </Text>
-            </View>
-            <View style={styles.inputView}>
-              {this.ans == null ? <Text></Text> : <Text style={styles.text}>{this.ans.toFixed(1)}</Text>}
-            </View>
-            <View style={styles.unitView}>
-              <Text style={styles.text}>pg/ml</Text>
-            </View>
-          </View>
-
-        </ScrollView>
-        {/* 引用 */}
-        {/* <View style={styles.cmt}>
-          <Text>
-            NT-proBNP calculator cannot and will not be held legally, financially, or medically
-            responsible for calculated NT-proBNP values and decisions made based on the NT-proBNP values obtained using this auto-calculation tool.
-          </Text>
-        </View> */}
-        {/* 機関情報 */}
-        {/* <View style={{ flexDirection: "row" }}>
-          <Image source={require('./src/fig/med_logo1_25.png')} style={{ width: 100, height: 100 }} />
-          <View style={styles.container}>
-            <Text style={{ margin: 5 }}>
-              Kasahara S, Shimokawa H et al. Int J Cardiol. 2019;280:184-189.
-             </Text>
-            <Text style={{ margin: 5 }}>
-              Department of Cardiovascular Medicine, Tohoku University Graduate School of Medicine
-            </Text>
-          </View>
-        </View> */}
-      </View>
-    )
-  }
-}
-
-const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-    // backgroundColor: '#FF00FF',
-    justifyContent: 'center',
-    // alignItems:'center',
-    paddingTop: 33,
-    paddingBottom: 30
-  },
-  inputValue: {
-    flexDirection: 'row',
-    margin: 10,
-    height: 70
-  },
-  divider: {
-    backgroundColor: '#20202020',
-    height: 2
-  },
-  text: {
-    fontSize: 30
-  },
-  valueNameView: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  inputView: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  unitView: {
-    flex: 0.5,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  Button: {
-
-  }
-})

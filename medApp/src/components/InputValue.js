@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { View, Text, ScrollView, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, TextInput, Alert, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 import { Button, } from 'react-native-elements';
-
+import SegmentedControlTab from "react-native-segmented-control-tab";
 
 export class InputValue extends Component {
   constructor(props) {
@@ -16,14 +16,15 @@ export class InputValue extends Component {
         <View style={styles.valueNameView}>
           <Text style={styles.text}>{this.props.valueName}</Text>
         </View>
-        <View style={styles.inputView}>
+        <KeyboardAvoidingView style={styles.inputView} behavior='padding' enabled>
           <TextInput
             ref={TextInput => { this.TextInput = TextInput }}
             style={styles.TextInput}
+            returnKeyType='done'
             keyboardType='decimal-pad'
+            clearTextOnFocus={true}
             placeholder="Type here"
             value={this.state.value}
-            onChangeText={(text) => this.setState({ text })}
             textAlign={'center'}
             onChangeText={(input) => {
               this.setState({ value: input });
@@ -39,11 +40,12 @@ export class InputValue extends Component {
               else {
                 this.state.value = null;
                 this.TextInput.clear();
+                this.props.setValue(null)
                 Alert.alert('value out of range', this.props.valueName + 'は' + this.props.min + 'から' + this.props.max + 'の値を入力して下さい');
               }
             }}
           />
-        </View>
+        </KeyboardAvoidingView>
         <View style={styles.unitView}>
           <Text style={styles.text}>{this.props.valueUnit}</Text>
         </View>
@@ -56,10 +58,23 @@ export class InputBinaryValue extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pushedL: false,
-      pushedR: false
+      selectedIndex: 0
     }
   }
+
+  handleIndexChange = index => {
+    if (index == 0) {
+      this.props.setValue(this.props.left)
+    }
+    else if (index == 1) {
+      this.props.setValue(this.props.right)
+    }
+    this.setState({
+      ...this.state,
+      selectedIndex: index
+    });
+  };
+
   render() {
     return (
       <View style={styles.inputBinaryValue}>
@@ -67,14 +82,12 @@ export class InputBinaryValue extends Component {
           <Text style={styles.text}>{this.props.valueName}</Text>
         </View>
         <View style={styles.buttonsView}>
-          {this.state.pushedL ?
-            <Button disabled title={this.props.left} backgroundColor='#ff5622'></Button> :
-            <Button title={this.props.left} onPress={() => { this.props.setValue(this.props.left); this.setState({ pushedL: true, pushedR: false }) }} backgroundColor='#ff5622'></Button>
-          }
-          {this.state.pushedR ?
-            <Button disabled title={this.props.right} backgroundColor='#ff5622'></Button> :
-            <Button title={this.props.right} onPress={() => { this.props.setValue(this.props.right); this.setState({ pushedR: true, pushedL: false }) }} backgroundColor='#ff5622'></Button>
-          }
+          <SegmentedControlTab
+            values={[this.props.left, this.props.right]}
+            selectedIndex={this.state.selectedIndex}
+            onTabPress={this.handleIndexChange}
+            fontSize={30}
+          />
         </View>
       </View>
     )
@@ -87,7 +100,7 @@ const styles = StyleSheet.create({
   inputValue: {
     flexDirection: 'row',
     margin: 10,
-    height: 60,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -95,7 +108,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    height: 60,
+    height: 50,
     margin: 10
   },
   valueNameView: {
@@ -123,12 +136,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   TextInput: {
-    height: 40,
+    height: 60,
     width: 150,
-    fontSize: 20
+    fontSize: 30
   },
   text: {
-    fontSize: 30
+    fontSize: 25
   },
   buttonText: {
     fontSize: 20
@@ -136,7 +149,7 @@ const styles = StyleSheet.create({
   Button: {
     width: 80,
     // alignItems: 'center',
-    backgroundColor: '#AAAAAA',
+    // '#66cdaa'
     // padding: 10,
     // margin:10
   },
