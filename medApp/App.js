@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, Alert, Image, KeyboardAvoidingView } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, Alert, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { Button, Divider } from 'react-native-elements';
 import { InputValue, InputBinaryValue } from './src/components/InputValue.js';
 import { matchesPattern } from '@babel/types';
@@ -20,6 +20,14 @@ export default class App extends Component {
     this.bnp = null;
     this.af = "Yes";
     this.ans = null;
+
+    this.os = null;
+    if (Platform.OS == 'ios') {
+      this.keybordAvoidingViewStile = "padding";
+    }
+    else {
+      this.os = "padding";
+    }
   }
   calc() {
     if (this.age == null || this.sex == null || this.height == null || this.weight == null || this.hem == null || this.cre == null || this.bnp == null || this.af == null) {
@@ -44,7 +52,7 @@ export default class App extends Component {
         </View>
         <Divider style={styles.divider}></Divider>
         {/* 数値入力 */}
-        <KeyboardAvoidingView style={{ flex: 5 }} behavior="height" enabled>
+        <KeyboardAvoidingView style={{ flex: 5 }} behavior={this.keybordAvoidingViewStile} enabled>
           <ScrollView>
             <Divider style={styles.divider}></Divider>
             <InputValue valueName='Age ' valueUnit='yaer' min={20} max={120} setValue={(value) => { this.age = value; this.willReCalc(); }} />
@@ -64,47 +72,26 @@ export default class App extends Component {
             <InputBinaryValue valueName='AF' left='Yes' right='No' setValue={(ret) => { this.af = ret; this.willReCalc() }} />
             <Divider style={styles.divider}></Divider>
           </ScrollView>
-        </KeyboardAvoidingView>
-        {/* 計算実行ボタン */}
-        {
-          this.state.calced ?
-            <Button disabled title='calculate' backgroundColor='#ff5622'></Button> :
-            <Button title='calculate' onPress={() => { this.calc() }} backgroundColor='#ff5622'></Button>
-        }
-        {/* 計算結果表示 */}
-        <View style={styles.inputValue}>
-          <View style={styles.valueNameView}>
-            <Text style={styles.text}> NT-proBNP </Text>
-          </View>
-          <View style={styles.inputView}>
-            {this.ans == null ? <Text></Text> : <Text style={styles.text}>{this.ans.toFixed(1)}</Text>}
-          </View>
-          <View style={styles.unitView}>
-            <Text style={styles.text}>pg/ml</Text>
-          </View>
-        </View>
-        <Divider style={styles.divider}></Divider>
-        {/* 引用 */}
-        <ScrollView style={{ flex: 1 }}>
-          <View style={styles.cmt}>
-            <Text>
-              NT-proBNP calculator cannot and will not be held legally, financially, or medically
-              responsible for calculated NT-proBNP values and decisions made based on the NT-proBNP values obtained using this auto-calculation tool.
-          </Text>
-          </View>
-          {/* 機関情報 */}
-          <View style={{ flexDirection: "row" }}>
-            <Image source={require('./src/fig/med_logo1_25.png')} style={{ width: 60, height: 60 }} />
-            <View style={styles.container}>
-              <Text style={{ margin: 5 }}>
-                Kasahara S, Shimokawa H et al. Int J Cardiol. 2019;280:184-189.
-             </Text>
-              <Text style={{ margin: 5 }}>
-                Department of Cardiovascular Medicine, Tohoku University Graduate School of Medicine
-            </Text>
+
+          {/* 計算実行ボタン */}
+          {
+            this.state.calced ?
+              <Button disabled title='calculate' backgroundColor='#ff5622'></Button> :
+              <Button title='calculate' onPress={() => { this.calc() }} backgroundColor='#ff5622'></Button>
+          }
+          {/* 計算結果表示 */}
+          <View style={styles.inputValue}>
+            <View style={styles.valueNameView}>
+              <Text style={styles.text}> NT-proBNP </Text>
+            </View>
+            <View style={styles.inputView}>
+              {this.ans == null ? <Text></Text> : <Text style={styles.text}>{this.ans.toFixed(1)}</Text>}
+            </View>
+            <View style={styles.unitView}>
+              <Text style={styles.text}>pg/ml</Text>
             </View>
           </View>
-        </ScrollView>
+        </KeyboardAvoidingView>
       </View >
     )
   }
