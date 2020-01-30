@@ -163,21 +163,16 @@ export default class App extends Component {
     )
   }
 }
-
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    // backgroundColor: '#FF00FF',
     justifyContent: 'space-evenly',
-    // alignItems:'center',
-    paddingTop: 33,
     paddingBottom: 0,
     paddingHorizontal: 5
   },
   inputValue: {
     flexDirection: 'row',
-    margin: 10,
-    height: 37,
+    height: 60,
   },
   divider: {
     backgroundColor: '#20202020',
@@ -194,16 +189,17 @@ const styles = StyleSheet.create({
     fontSize: 25
   },
   text: {
-    fontSize: 20
+    fontSize: 25,
+    color: 'red'
   },
   valueNameView: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   inputView: {
-    flex: 1,
+    flex: 0.7,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -211,12 +207,9 @@ const styles = StyleSheet.create({
   unitView: {
     flex: 0.5,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  Button: {
-
-  }
 })
 
 

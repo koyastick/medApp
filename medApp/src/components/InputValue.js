@@ -139,49 +139,60 @@ export class ValueName extends Component {
 const styles = StyleSheet.create({
   inputValue: {
     flexDirection: 'row',
-    margin: 10,
-    height: 50,
+    margin: 0,
+    height: 60,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+
   },
   inputBinaryValue: {
     flexDirection: 'row',
+    margin: 0,
+    height: 60,
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    height: 50,
-    margin: 10
+    backgroundColor: '#f0f0f0',
   },
   valueNameView: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    marginLeft: 5
   },
   inputView: {
-    flex: 1,
+    flex: 0.7,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 5
   },
   unitView: {
     flex: 0.5,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    marginRight: 5
   },
   buttonsView: {
-    flex: 1.5,
+    flex: 1.2,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    marginRight: 5
   },
   TextInput: {
-    height: 60,
-    width: 150,
-    fontSize: 30
+    height: 50,
+    width: 120,
+    fontSize: 25
   },
   text: {
     fontSize: 25
+  },
+  textBold: {
+    fontSize: 25,
+    fontWeight: "bold"
   },
   buttonText: {
     fontSize: 20
