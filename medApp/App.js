@@ -87,16 +87,19 @@ export default class App extends Component {
           {/* 計算結果表示 */}
           <View style={styles.inputValue}>
             <View style={styles.valueNameView}>
-              <Text style={styles.text}> NT-proBNP </Text>
-            </View>
-            <View style={styles.inputView}>
-              {this.ans == null ? <Text></Text> : <Text style={styles.text}>{this.ans.toFixed(1)}</Text>}
-            </View>
-            <View style={styles.unitView}>
-              <Text style={styles.text}>pg/ml</Text>
-            </View>
+            <Text style={styles.textResult}>NT-proBNP </Text>
           </View>
-        </KeyboardAvoidingView>
+          <View style={styles.inputView}>
+            {this.ans == null ? <Text></Text> : <Text style={styles.text}>{this.ans.toFixed(1)}</Text>}
+          </View>
+          <View style={styles.unitView}>
+            <Text style={styles.textResult}>pg/ml</Text>
+          </View>
+          <View style={styles.unitView}>
+            {/* <Button buttonStyle={{ backgroundColor: '#f44336' }} title='reset' onPress={this.reset}></Button> */}
+          </View>
+        </View>
+        <Divider style={styles.divider}></Divider>
       </View >
     )
   }
@@ -120,6 +123,16 @@ const styles = StyleSheet.create({
   divider: {
     backgroundColor: '#20202020',
     height: 2
+  },
+  textTitle: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: '#0076fe',
+    // fontFamily: 'courier',
+    // fontFamily: 'courier'
+  },
+  textResult: {
+    fontSize: 25
   },
   text: {
     fontSize: 20
