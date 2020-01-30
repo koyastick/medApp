@@ -46,6 +46,11 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.main}>
+        {/* safety space for ios */}
+        {Platform.OS == "android" ?
+          <View style={{ height: 10, backgroundColor: 'white' }} /> :
+          <View style={{ height: 33, backgroundColor: 'white' }} />
+        }
         {/* アプリケーションタイトル */}
         <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 0 }}>
           <Text style={{ fontSize: 30 }}>NT-proBNP calculator</Text>
