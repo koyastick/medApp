@@ -98,25 +98,43 @@ export default class App extends Component {
         <KeyboardAvoidingView style={{ flex: 5 }} behavior={this.keybordAvoidingViewStile} enabled>
           <ScrollView>
             <Divider style={styles.divider}></Divider>
-            <InputValue valueName='Age ' valueUnit='y/o' min={20} max={120} setValue={(value) => { this.age = value; this.willReCalc(); }} />
+
+            <InputValue ref={InputValue => { this.InputValueYear = InputValue }} valueName='Age' bigChar='A' valueUnit='y/o' min={20} max={120} setValue={(value) => { this.age = value; this.willReCalc(); }} />
+
             <Divider style={styles.divider}></Divider>
-            <InputBinaryValue valueName='Sex' left='Man' right='Woman' setValue={(ret) => { this.sex = ret; this.willReCalc() }} />
+
+            <InputBinaryValue ref={InputBinaryValue => { this.InputValueSex = InputBinaryValue }} bigChar='S' valueName='Sex' left='Man' right='Woman' setValue={(ret) => { this.sex = ret; this.willReCalc() }} />
+
             <Divider style={styles.divider}></Divider>
-            <InputValue valueName='Height ' valueUnit='cm' min={120} max={200} setValue={(value) => { this.height = value; this.willReCalc(); }} />
+
+            <InputValue ref={InputValue => { this.InputValueHeight = InputValue }} valueName='Height' bigChar='H' valueUnit='cm' min={120} max={200} setValue={(value) => { this.height = value; this.willReCalc(); }} />
+
             <Divider style={styles.divider}></Divider>
-            <InputValue valueName='Weight ' valueUnit='kg' min={25} max={130} setValue={(value) => { this.weight = value; this.willReCalc(); }} />
+
+            <InputValue ref={InputValue => { this.InputValueWieght = InputValue }} valueName='Weight' bigChar='W' valueUnit='kg' min={25} max={130} setValue={(value) => { this.weight = value; this.willReCalc(); }} />
+
             <Divider style={styles.divider}></Divider>
-            <InputValue valueName='Hemoglobin ' valueUnit='g/dl' min={5} max={20} setValue={(value) => { this.hem = value; this.willReCalc(); }} />
+
+            <InputValue ref={InputValue => { this.InputValueHe = InputValue }} valueName='Hemoglobin' bigChar='He' valueUnit='g/dl' min={5} max={20} setValue={(value) => { this.hem = value; this.willReCalc(); }} />
+
             <Divider style={styles.divider}></Divider>
-            <InputValue valueName='Creatinine ' valueUnit='md/dl' min={0} max={3.0} setValue={(value) => { this.cre = value; this.willReCalc(); }} />
+
+            <InputValue ref={InputValue => { this.InputValueCr = InputValue }} valueName='Creatinine' bigChar='Cr' valueUnit='md/dl' min={0} max={3.0} setValue={(value) => { this.cre = value; this.willReCalc(); }} />
+
             <Divider style={styles.divider}></Divider>
-            <InputValue valueName='BNP ' valueUnit='pg/dl' min={4} max={4000} setValue={(value) => { this.bnp = value; this.willReCalc(); }} />
+
+            <InputValue ref={InputValue => { this.InputValueBNP = InputValue }} valueName='BNP' bigChar='BNP' valueUnit='pg/dl' min={4} max={4000} setValue={(value) => { this.bnp = value; this.willReCalc(); }} />
+
             <Divider style={styles.divider}></Divider>
-            <InputBinaryValue valueName='AF' left='Yes' right='No' setValue={(ret) => { this.af = ret; this.willReCalc() }} />
+
+            <InputBinaryValue ref={InputBinaryValue => { this.InputValueAF = InputBinaryValue }} valueName='AF' bigChar="AF" left='Yes' right='No' setValue={(ret) => { this.af = ret; this.willReCalc() }} />
+
             <Divider style={styles.divider}></Divider>
           </ScrollView>
+        </KeyboardAvoidingView>
 
           {/* 計算実行ボタン */}
+        <View style={{ margin: 0 }}>
           {
             this.state.calced ?
               <Button disabled title='calculate' backgroundColor='#0076fe'></Button> :
