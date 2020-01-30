@@ -53,7 +53,7 @@ export default class App extends Component {
         }
         {/* アプリケーションタイトル */}
         <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 0 }}>
-          <Text style={{ fontSize: 30 }}>NT-proBNP calculator</Text>
+          <Text style={styles.textTitle}>NT-proBNP calculator</Text>
         </View>
         <Divider style={styles.divider}></Divider>
         {/* 数値入力 */}
