@@ -81,8 +81,8 @@ export default class App extends Component {
           {/* 計算実行ボタン */}
           {
             this.state.calced ?
-              <Button disabled title='calculate' backgroundColor='#ff5622'></Button> :
-              <Button title='calculate' onPress={() => { this.calc() }} backgroundColor='#ff5622'></Button>
+              <Button disabled title='calculate' backgroundColor='#0076fe'></Button> :
+              <Button buttonStyle={{ backgroundColor: '#0074ff' }} title='calculate' onPress={() => { this.calc() }} backgroundColor='red'></Button>
           }
           {/* 計算結果表示 */}
           <View style={styles.inputValue}>
