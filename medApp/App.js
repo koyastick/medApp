@@ -60,7 +60,7 @@ export default class App extends Component {
         <KeyboardAvoidingView style={{ flex: 5 }} behavior={this.keybordAvoidingViewStile} enabled>
           <ScrollView>
             <Divider style={styles.divider}></Divider>
-            <InputValue valueName='Age ' valueUnit='yaer' min={20} max={120} setValue={(value) => { this.age = value; this.willReCalc(); }} />
+            <InputValue valueName='Age ' valueUnit='y/o' min={20} max={120} setValue={(value) => { this.age = value; this.willReCalc(); }} />
             <Divider style={styles.divider}></Divider>
             <InputBinaryValue valueName='Sex' left='Man' right='Woman' setValue={(ret) => { this.sex = ret; this.willReCalc() }} />
             <Divider style={styles.divider}></Divider>
