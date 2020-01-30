@@ -140,9 +140,12 @@ export default class App extends Component {
               <Button disabled title='calculate' backgroundColor='#0076fe'></Button> :
               <Button buttonStyle={{ backgroundColor: '#0074ff' }} title='calculate' onPress={() => { this.calc() }} backgroundColor='red'></Button>
           }
-          {/* 計算結果表示 */}
-          <View style={styles.inputValue}>
-            <View style={styles.valueNameView}>
+        </View>
+
+        {/* 計算結果表示 */}
+        <Divider style={styles.divider}></Divider>
+        <View style={styles.inputValue}>
+          <View style={styles.valueNameView}>
             <Text style={styles.textResult}>NT-proBNP </Text>
           </View>
           <View style={styles.inputView}>
