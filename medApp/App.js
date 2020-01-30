@@ -29,6 +29,20 @@ export default class App extends Component {
       this.os = "padding";
     }
   }
+  loggingValue() {
+    console.log(
+      this.age,
+      this.sex,
+      this.height,
+      this.weight,
+      this.hem,
+      this.cre,
+      this.bnp,
+      this.af,
+      this.ans,
+    )
+  }
+
   calc() {
     if (this.age == null || this.sex == null || this.height == null || this.weight == null || this.hem == null || this.cre == null || this.bnp == null || this.af == null) {
       Alert.alert('記入漏れがあります')
