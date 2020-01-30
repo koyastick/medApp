@@ -10,6 +10,14 @@ export class InputValue extends Component {
       value: null
     }
   }
+  reset = () => {
+    this.TextInput.clear();
+  }
+
+  fucusAgeTextInput = () => {
+    this.props.valueName === 'Age' ? this.TextInput.focus() : {};
+  }
+
   render() {
     return (
       <View style={styles.inputValue}>
@@ -42,6 +50,7 @@ export class InputValue extends Component {
                 this.TextInput.clear();
                 this.props.setValue(null)
                 Alert.alert('value out of range', this.props.valueName + 'は' + this.props.min + 'から' + this.props.max + 'の値を入力して下さい');
+                this.TextInput.focus();
               }
             }}
           />
@@ -61,7 +70,12 @@ export class InputBinaryValue extends Component {
       selectedIndex: 0
     }
   }
-
+  reset = () => {
+    this.setState({
+      ...this.state,
+      selectedIndex: 0
+    });
+  }
   handleIndexChange = index => {
     if (index == 0) {
       this.props.setValue(this.props.left)

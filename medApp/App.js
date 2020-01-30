@@ -57,6 +57,30 @@ export default class App extends Component {
     this.ans = null
   }
 
+  reset = () => {
+    this.setState({ calced: false });
+    this.age = null;
+    this.InputValueYear.reset();
+    this.sex = "Man";
+    this.InputValueSex.reset();
+    this.height = null;
+    this.InputValueHeight.reset();
+    this.weight = null;
+    this.InputValueWieght.reset();
+    this.hem = null;
+    this.InputValueHe.reset();
+    this.cre = null;
+    this.InputValueCr.reset();
+    this.bnp = null;
+    this.InputValueBNP.reset();
+    this.af = "Yes";
+    this.InputValueAF.reset();
+    this.ans = null;
+    this.InputValueYear.fucusAgeTextInput();
+
+    console.log("reset");
+  }
+
   render() {
     return (
       <View style={styles.main}>
@@ -110,7 +134,7 @@ export default class App extends Component {
             <Text style={styles.textResult}>pg/ml</Text>
           </View>
           <View style={styles.unitView}>
-            {/* <Button buttonStyle={{ backgroundColor: '#f44336' }} title='reset' onPress={this.reset}></Button> */}
+            <Button buttonStyle={{ backgroundColor: '#f44336' }} title='reset' onPress={this.reset}></Button>
           </View>
         </View>
         <Divider style={styles.divider}></Divider>
