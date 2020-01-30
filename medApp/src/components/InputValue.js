@@ -21,9 +21,7 @@ export class InputValue extends Component {
   render() {
     return (
       <View style={styles.inputValue}>
-        <View style={styles.valueNameView}>
-          <Text style={styles.text}>{this.props.valueName}</Text>
-        </View>
+        <ValueName valueName={this.props.valueName} bigChar={this.props.bigChar}></ValueName>
         <KeyboardAvoidingView style={styles.inputView} behavior='padding' enabled>
           <TextInput
             ref={TextInput => { this.TextInput = TextInput }}
@@ -92,9 +90,7 @@ export class InputBinaryValue extends Component {
   render() {
     return (
       <View style={styles.inputBinaryValue}>
-        <View style={styles.valueNameView}>
-          <Text style={styles.text}>{this.props.valueName}</Text>
-        </View>
+        <ValueName valueName={this.props.valueName} bigChar={this.props.bigChar}></ValueName>
         <View style={styles.buttonsView}>
           <SegmentedControlTab
             values={[this.props.left, this.props.right]}
@@ -103,11 +99,41 @@ export class InputBinaryValue extends Component {
             fontSize={30}
           />
         </View>
-      </View>
+      </View >
     )
   }
 }
 
+export class ValueName extends Component {
+  CinS(c, str) {
+    let occ = false;
+    for (let i = 0; i < str.length; i++) {
+      if (c == str[i])
+        occ = true;
+    }
+    return occ
+  }
+  render() {
+    let text = []
+    for (let i = 0; i < this.props.valueName.length; i++) {
+      if (this.CinS(this.props.valueName[i], this.props.bigChar)) {
+        text.push(
+          <Text style={styles.textBold}>{this.props.valueName[i]}</Text>
+        )
+      }
+      else {
+        text.push(
+          <Text style={styles.text}>{this.props.valueName[i]}</Text>
+        )
+      }
+    }
+    return (
+      <View style={styles.valueNameView}>
+        {text}
+      </View>
+    );
+  }
+}
 
 
 const styles = StyleSheet.create({
